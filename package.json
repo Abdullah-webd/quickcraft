@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "server": "nodemon server/server.js",
     "start": "concurrently \"npm run server\" \"npm run dev\"",
-    "builder": "npm install && npm install --prefix client && npm run build --prefix client"
+    "builder": "npm install && npm run build"
+
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

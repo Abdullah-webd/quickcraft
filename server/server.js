@@ -7,15 +7,15 @@ import userRoutes from './routes/userRoutes.js';
 import performanceRoutes from './routes/performanceRoutes.js';
 import geminiRoutes from './routes/geminiRoutes.js';
 import path from 'path';
-
-const _dirname = path.resolve();
-
+import { fileURLToPath } from 'url';
 // Load environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 5000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // CORS configuration
 const corsOptions = {
@@ -34,11 +34,12 @@ const corsOptions = {
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.static(path.join(_dirname,'/client/dist')))
+app.use(express.static(path.join(__dirname, '../dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
-app.all('/{*any}',(req,res)=>{
-    res.sendFile(path.join(_dirname,'client','dist','index.html'))
-})
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/quizapp', {
