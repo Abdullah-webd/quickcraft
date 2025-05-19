@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "nodemon server/server.js",
-    "start": "concurrently \"npm run server\" \"npm run dev\"",
+    "start": "concurrently \"node server\" \"npm run dev\"",
     "builder": "npm install && npm run build",
-    "render-backend-start": "node server/server.js"
+    "render-backend-start": "node server/server.js "
 
   },
   "dependencies": {
