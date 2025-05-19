@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "nodemon server/server.js",
-    "start": "node server.js && npm run dev",
+    "start": "npm run server.js && npm run dev",
     "builder": "npm install && npm run build "
 
   },
