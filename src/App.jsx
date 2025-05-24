@@ -11,6 +11,7 @@ import QuizTaker from './components/taker/QuizTaker';
 import PerformanceView from './components/performance/PerformanceView';
 import UserContext from './context/UserContext';
 import api from './services/api';
+import { TheoryQuestionTaker } from './components/theory/TheoryQuestionTaker';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -78,6 +79,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/create" element={<QuizCreator />} />
+            <Route path="/theory/:id" element={<TheoryQuestionTaker />} />
             <Route path="/quiz/:id" element={<QuizTaker />} />
             <Route path="/performance" element={<PerformanceView />} />
             <Route path="*" element={<Navigate to="/" replace />} />

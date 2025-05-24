@@ -11,6 +11,19 @@ const quizSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  timerMode: {
+    type: Boolean,
+    default: false
+  },
+  timeLimit: {
+    type: Number,
+    required: function() {
+      return this.timerMode === true;
+    },
+    min: 1,
+    max: 180, // Maximum 3 hours in minutes
+    default: 30
+  },
   questions: [{
     question: {
       type: String,

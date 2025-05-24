@@ -95,7 +95,9 @@ function Dashboard() {
                         </div>
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-1" />
-                          <span>{formatDate(quiz.createdAt)}</span>
+                          <span>
+                            {quiz.timerMode ? `${quiz.timeLimit} mins` : 'No time limit'}
+                          </span>
                         </div>
                       </div>
                     </div>

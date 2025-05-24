@@ -6,8 +6,10 @@ import quizRoutes from './routes/quizRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import performanceRoutes from './routes/performanceRoutes.js';
 import geminiRoutes from './routes/geminiRoutes.js';
+import theoryRoutes from './routes/theoryRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 // Load environment variables
 dotenv.config();
 
@@ -37,12 +39,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
+// Serve frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist')
-);
+  res.sendFile(path.join(__dirname, '../dist'));
 });
-
-
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/quizapp', {
@@ -57,6 +57,7 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/performance', performanceRoutes);
 app.use('/api/gemini', geminiRoutes);
+app.use('/api/theory', theoryRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

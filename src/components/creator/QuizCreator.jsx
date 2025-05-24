@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Clock } from 'lucide-react';
 import api from '../../services/api';
 import UserContext from '../../context/UserContext';
 
@@ -11,6 +11,8 @@ function QuizCreator() {
   const [quizTitle, setQuizTitle] = useState('');
   const [quizDescription, setQuizDescription] = useState('');
   const [questionsInput, setQuestionsInput] = useState('');
+  const [timerMode, setTimerMode] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(30);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Redirect if user not logged in
@@ -46,15 +48,14 @@ function QuizCreator() {
 
       // Validate each question
       questions.forEach((q, index) => {
-        if (!q.question || !Array.isArray(q.answer) || q.answer.length !== 4) {
+        if (!q.question || !Array.isArray(q.answer) || q.answer.length !== 4 || !q.correctAnswerIndex) {
           throw new Error(`Question ${index + 1} must have a question and exactly 4 answers`);
         }
       });
 
       // Add correctAnswerIndex (default to first answer)
       return questions.map(q => ({
-        ...q,
-        correctAnswerIndex: 0
+        ...q
       }));
     } catch (error) {
       throw new Error(`Invalid question format: ${error.message}`);
@@ -74,6 +75,11 @@ function QuizCreator() {
 
     if (!questionsInput.trim()) {
       toast.error('Questions are required');
+      return false;
+    }
+
+    if (timerMode && (timeLimit < 1 || timeLimit > 180)) {
+      toast.error('Time limit must be between 1 and 180 minutes');
       return false;
     }
 
@@ -102,6 +108,8 @@ function QuizCreator() {
         title: quizTitle,
         description: quizDescription,
         questions,
+        timerMode,
+        timeLimit: timerMode ? timeLimit : null,
         creator: user._id
       };
       
@@ -158,7 +166,7 @@ function QuizCreator() {
             />
           </div>
           
-          <div className="mb-8">
+          <div className="mb-6">
             <label htmlFor="quizDescription" className="form-label">
               Quiz Description
             </label>
@@ -170,6 +178,43 @@ function QuizCreator() {
               placeholder="Enter a description for your quiz"
               required
             />
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center mb-4">
+              <input
+                id="timerMode"
+                type="checkbox"
+                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                checked={timerMode}
+                onChange={(e) => setTimerMode(e.target.checked)}
+              />
+              <label htmlFor="timerMode" className="ml-2 text-sm font-medium text-gray-700 flex items-center">
+                <Clock className="w-4 h-4 mr-2" />
+                Enable Timer Mode
+              </label>
+            </div>
+
+            {timerMode && (
+              <div className="pl-6 border-l-2 border-primary-100">
+                <label htmlFor="timeLimit" className="form-label">
+                  Time Limit (minutes)
+                </label>
+                <input
+                  id="timeLimit"
+                  type="number"
+                  min="1"
+                  max="180"
+                  className="form-input"
+                  value={timeLimit}
+                  onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+                  required={timerMode}
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Set a time limit between 1 and 180 minutes
+                </p>
+              </div>
+            )}
           </div>
           
           <div className="mb-8">
